@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: LassoBench
+Version: 0.0.0
+Requires-Dist: sparse-ho@ https://github.com/QB3/sparse-ho/archive/master.zip
+Requires-Dist: celer
+Requires-Dist: pyDOE
+Requires-Dist: libsvmdata
+Requires-Dist: ax-platform
+Requires-Dist: matplotlib>=2.0.0
+Requires-Dist: numpy>=1.12
+Requires-Dist: scipy>=0.18.0
+Requires-Dist: scikit-learn>=0.21
+Requires-Dist: seaborn>=0.7
+Requires-Dist: GPy>=1.9.2
+Requires-Dist: pyDOE>=0.3.8
+Dynamic: requires-dist

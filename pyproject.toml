@@ -1,0 +1,211 @@
+[project]
+name = "natural-bo"
+version = "0.1.0"
+description = "Natural Bayesian Optimization with Riemannian TuRBO"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+keywords = ["bayesian-optimization", "gaussian-processes", "trust-region", "ml"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Operating System :: OS Independent",
+]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "setuptools",
+  "nvidia-ml-py>=13.590.44,<14.0.0",
+  "botorch",
+  "pandas>=2.0.3",
+  "matplotlib>=3.7.4",
+  "numpy>=1.21.0,<2",
+  "openpyxl>=3.1.2",
+  "pymoo>=0.6.1.1",
+  "scipy>=1.10.1",
+  "psutil>=7.2.1,<8.0.0",
+  # Note: torch is in [tool.poetry.dependencies] with custom PyTorch CUDA source
+  "torch (>=2.10.0,<3.0.0)",
+  "imageio (>=2.37.2,<3.0.0)",
+  "imageio-ffmpeg (>=0.6.0,<0.7.0)",
+  "gin-config (>=0.5.0,<0.6.0)",
+  "xgboost (>=3.1.3,<4.0.0)",
+  "torchdiffeq (>=0.2.5,<0.3.0)",
+  "pot (>=0.9.6.post1,<0.10.0)",
+  "geomstats (>=2.8.0,<3.0.0)",
+  ]
+
+[project.optional-dependencies]
+pytest = [
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+    "pytest-profiling",
+    "check-manifest",
+    "coverage",
+    "typing_extensions",
+    "ruff>=0.13.0",
+]
+gpu = [
+    "nvidia-ml-py",
+]
+benchmarks = [
+    "mujoco",
+]
+bounce = [
+    "gin-config>=0.5.0",
+]
+# Note: LassoBench is installed as a local editable package from src/benchmark/LassoBench
+
+
+[tool.poetry]
+packages = [
+  { include = "src", from = "." },
+]
+
+include = [
+  { path = "LICENSE", format = "sdist" },
+  { path = "LICENSE", format = "wheel" },
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.2"
+pytest-cov = "^7.0.0"
+pytest-xdist = "^3.8.0"
+
+[build-system]
+requires = ["poetry-core", "cython", "setuptools"]
+build-backend = "poetry.core.masonry.api"
+
+# Dependencies that cannot be expressed in PEP 621 format
+# These require custom sources, git repositories, or local paths
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+
+# PyTorch with CUDA support (from custom source)
+
+# Local editable package
+LassoBench = {path = "src/benchmark/LassoBench", develop = true}
+
+# Git dependencies
+ebo = {git = "https://github.com/LeoIV/Ensemble-Bayesian-Optimization.git"}
+sparse-ho = {git = "https://github.com/QB3/sparse-ho.git"}
+
+# LassoBench dependencies
+# These are required by LassoBench but not in standard PyPI or need specific versions
+celer = "*"
+pyDOE = "*"
+libsvmdata = "*"
+ax-platform = "*"
+seaborn = ">=0.7"
+GPy = ">=1.9.2"
+torch = {source = "pytorch"}
+
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu128"
+priority = "explicit"
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+show-fixes = true
+# Select rules for various checks
+[lint]
+extend-select = [
+    "B",
+    "W",
+    "A",  # Code quality checks
+    "C",  # Cyclomatic complexity (McCabe complexity)
+    "D",  # Pydocstyle (docstring checks)
+    "N",  # Naming conventions (PEP8-naming)
+    "RUF",  # Ruff specific checks for readability and optimizations
+    "TYP",  # Type annotations,
+    "C90",
+    "D100",  # Missing docstring in public module
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D103",  # Missing docstring in public function
+    "D200",  # One-line docstring should fit on one line
+    "D205",  # One blank line required between summary and description
+    "D400",  # First line should end with a period
+    "D403",  # First word of the docstring should be capitalized
+    "D417"   # Missing argument descriptions in docstring
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Maximum allowed complexity for functions (McCabe complexity)
+[lint.mccabe]
+# Flag errors (`C901`) whenever the complexity level exceeds 5.
+max-complexity = 5
+
+[format]
+skip-magic-trailing-comma = false
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"
